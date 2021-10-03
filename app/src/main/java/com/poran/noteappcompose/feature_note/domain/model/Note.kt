@@ -11,7 +11,7 @@ data class Note(
     val content: String,
     val timeStamp: Long = System.currentTimeMillis(),
     val color: Int,
-    @PrimaryKey val id: Int
+    @PrimaryKey val id: Int?
 ) {
     companion object {
         val noteColors = listOf(
