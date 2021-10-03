@@ -5,15 +5,14 @@ import androidx.room.Room
 import com.poran.noteappcompose.feature_note.data.data_source.NoteDatabase
 import com.poran.noteappcompose.feature_note.data.repository.NoteRepositoryImpl
 import com.poran.noteappcompose.feature_note.domain.repository.NoteRepository
-import com.poran.noteappcompose.feature_note.domain.use_case.AddNote
-import com.poran.noteappcompose.feature_note.domain.use_case.DeleteNote
-import com.poran.noteappcompose.feature_note.domain.use_case.GetNotes
-import com.poran.noteappcompose.feature_note.domain.use_case.NoteUseCases
+import com.poran.noteappcompose.feature_note.domain.use_case.*
+import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+@Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
@@ -39,7 +38,8 @@ object AppModule {
         return NoteUseCases(
             getNotes = GetNotes(repository),
             deleteNote = DeleteNote(repository),
-            addNote = AddNote(repository)
+            addNote = AddNote(repository),
+            getNote = GetNote(repository)
         )
     }
 }
