@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import com.poran.noteappcompose.feature_note.domain.model.Note
+import java.sql.Timestamp
 
 
 @Composable
@@ -63,7 +64,6 @@ fun NoteItem(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
-                .padding(end = 32.dp)
         ) {
             Text(
                 text = note.title,
@@ -80,15 +80,64 @@ fun NoteItem(
                 maxLines = 10,
                 overflow = TextOverflow.Ellipsis
             )
-        }
-        
-        IconButton(
-            onClick = onDeleteNote,
-            modifier = Modifier.align(Alignment.BottomEnd)
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-            Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Note")
+                Text(
+                    text = note.timeStamp.toFormattedTime(),
+                    style = MaterialTheme.typography.body2
+                )
+                IconButton(
+                    onClick = onDeleteNote,
+                ) {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Note")
+                }
+            }
         }
 
+    }
+
+}
+
+fun Long.toFormattedTime(): String {
+    val SECOND_MILLIS = 1000
+    val MINUTE_MILLIS = 60 * SECOND_MILLIS
+    val HOUR_MILLIS = 60 * MINUTE_MILLIS
+    val DAY_MILLIS = 24 * HOUR_MILLIS
+
+    val now = System.currentTimeMillis()
+    if (this > now || this <= 0) {
+        return Timestamp(this).toString()
+    }
+
+
+    val  diff = now - this;
+    return when {
+        diff < MINUTE_MILLIS -> {
+            "just now";
+        }
+        diff < 2 * MINUTE_MILLIS -> {
+            "a minute ago";
+        }
+        diff < 50 * MINUTE_MILLIS -> {
+            "${diff / MINUTE_MILLIS} minutes ago";
+        }
+        diff < 90 * MINUTE_MILLIS -> {
+            "an hour ago";
+        }
+        diff < 24 * HOUR_MILLIS -> {
+            "${diff / HOUR_MILLIS} hours ago";
+        }
+        diff < 48 * HOUR_MILLIS -> {
+            "yesterday";
+        }
+        else -> {
+            "${diff / DAY_MILLIS} days ago";
+        }
     }
 
 }
